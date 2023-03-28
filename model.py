@@ -111,3 +111,7 @@ def handle_errors(error):
     error_type = error.status_line
     error_msg = error.body
     return page_view("error", error_type=error_type, error_msg=error_msg)
+
+
+def friend_list():
+    return page_view("friendlist")
