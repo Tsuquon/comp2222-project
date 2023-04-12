@@ -7,6 +7,7 @@
 '''
 import view
 import random
+import no_sql_db
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
@@ -49,12 +50,15 @@ def login_check(username, password):
 
     # By default assume good creds
     login = True
+    # print(username)
+    # print(no_sql_db.database.search_table('users', 'username', username))
     
-    if username != "admin": # Wrong Username
+    if no_sql_db.database.search_table('users', 'username', username) is None:
+        print("this runs")
         err_str = "Incorrect Username"
         login = False
-    
-    if password != "password": # Wrong password
+        
+    if no_sql_db.database.search_table('users', 'password', password) is None:
         err_str = "Incorrect Password"
         login = False
         
@@ -111,3 +115,7 @@ def handle_errors(error):
     error_type = error.status_line
     error_msg = error.body
     return page_view("error", error_type=error_type, error_msg=error_msg)
+
+
+def friend_list():
+    return page_view("friend-list")

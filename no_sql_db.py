@@ -11,8 +11,8 @@
 class Table():
     def __init__(self, table_name, *table_fields):
         self.entries = []
-        self.fields = table_fields
-        self.name = table_name
+        self.fields = table_fields # list 
+        self.name = table_name # string 
 
     def create_entry(self, data):
         '''

@@ -129,3 +129,7 @@ def post_debug(cmd):
 @error(404)
 def error(error): 
     return model.handle_errors(error)
+
+@get('/friend-list')
+def get_friend_list():
+    return model.friend_list()

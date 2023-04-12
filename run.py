@@ -26,6 +26,7 @@ from bottle import run
 import model
 import view
 import controller
+import no_sql_db
 
 #-----------------------------------------------------------------------------
 
@@ -44,6 +45,7 @@ def run_server():
         run_server
         Runs a bottle server
     '''
+    manage_db()
     run(host=host, port=port, debug=debug)
 
 #-----------------------------------------------------------------------------
@@ -55,7 +57,10 @@ def manage_db():
     '''
         Blank function for database support, use as needed
     '''
-    pass
+    no_sql_db.database.create_table_entry('users', ['0', 'liam', 'password'])
+    no_sql_db.database.create_table_entry('users', ['1', 'tyra', 'password'])
+
+    # print(no_sql_db.database.search_table('users', 'id', '0'))
 
 """
 import sql
