@@ -45,5 +45,10 @@ html, body {
 }
 
 #friend-list {
-    border: 1px black;
+    border: 10px solid black;
+
+}
+
+table {
+    border: 10px solid black;
 }
