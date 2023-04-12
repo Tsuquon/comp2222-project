@@ -19,7 +19,7 @@ def serve_pictures(picture):
         serve_pictures
 
         Serves images from static/img/
-`
+
         :: picture :: A path to the requested picture
 
         Returns a static file object containing the requested picture
@@ -129,8 +129,3 @@ def post_debug(cmd):
 @error(404)
 def error(error): 
     return model.handle_errors(error)
-
-
-@get('/friend-list')
-def get_friends():
-    return model.friend_list()
