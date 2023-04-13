@@ -1,3 +1,5 @@
+import hashlib
+
 # This file provides a very simple "no sql database using python dictionaries"
 # If you don't know SQL then you might consider something like this for this course
 # We're not using a class here as we're roughly expecting this to be a singleton
@@ -52,7 +54,7 @@ class DB():
         self.tables = {}
 
         # Setup your tables
-        self.add_table('users', "id", "username", "password")
+        self.add_table('users', "id", "username", "password", "salt")
         
         return
 
@@ -76,7 +78,19 @@ class DB():
         '''
             Calls the create entry method on the appropriate table
         '''
-        return self.tables[table_name].create_entry(data)
+        data[2] = data[2] + data[3] # password with salt appended
+        salt = data[3]
+        enc_data = self.encrypt_data(data, salt)
+        return self.tables[table_name].create_entry(enc_data)
+    
+    # generates the hash of the password and returns to create_table_entry
+    def encrypt_data(self, raw_data, salt):
+        enc_data = [hashlib.sha256(bytes(data, 'utf-8')).hexdigest() for data in raw_data]
+        enc_data[-1] = salt
+        return enc_data
+        
+        
+        
 
 
 # Our global database

@@ -16,6 +16,7 @@
 import os
 import sys
 from bottle import run
+import bcrypt
 
 #-----------------------------------------------------------------------------
 # You may eventually wish to put these in their own directories and then load 
@@ -32,7 +33,7 @@ import no_sql_db
 
 # It might be a good idea to move the following settings to a config file and then load them
 # Change this to your IP address or 0.0.0.0 when actually hosting
-host = 'localhost'
+host = '0.0.0.0'
 
 # Test port, change to the appropriate port to host
 port = 8081
@@ -57,24 +58,23 @@ def manage_db():
     '''
         Blank function for database support, use as needed
     '''
-    no_sql_db.database.create_table_entry('users', ['0', 'liam', 'password'])
-    no_sql_db.database.create_table_entry('users', ['1', 'tyra', 'password'])
-
-    # print(no_sql_db.database.search_table('users', 'id', '0'))
-
-"""
-import sql
+    salt = generate_salt()
+    no_sql_db.database.create_table_entry('users', ['0', 'liam', 'password', salt])
     
-def manage_db():
-    '''
-        manage_db
-        Starts up and re-initialises an SQL databse for the server
-    '''
-    database_args = ":memory:" # Currently runs in RAM, might want to change this to a file if you use it
-    sql_db = sql.SQLDatabase(database_args=database_args)
+    salt = generate_salt()
+    no_sql_db.database.create_table_entry('users', ['1', 'tyra', 'password', salt])
+    
+    
+    
+    # # don't think this is used
+    # no_sql_db.database.add_table("friends-liam", "username")
+    # no_sql_db.database.add_table("friends-tyra", "username")
 
-    return
-"""
+def generate_salt() -> str:
+    salt = bcrypt.gensalt().decode('utf-8')
+    print(salt)
+    return salt
+
 
 #-----------------------------------------------------------------------------
 

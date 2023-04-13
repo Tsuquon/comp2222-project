@@ -100,7 +100,7 @@ def post_login():
     # Handle the form processing
     username = request.forms.get('username')
     password = request.forms.get('password')
-    
+        
     # Call the appropriate method
     return model.login_check(username, password)
 

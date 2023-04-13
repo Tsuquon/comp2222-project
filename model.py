@@ -1,3 +1,5 @@
+import hashlib
+
 '''
     Our Model class
     This should control the actual "logic" of your website
@@ -50,23 +52,30 @@ def login_check(username, password):
 
     # By default assume good creds
     login = True
-    # print(username)
-    # print(no_sql_db.database.search_table('users', 'username', username))
+
+    hash_user = hashlib.sha256(bytes(username, 'utf-8')).hexdigest()
+
     
-    if no_sql_db.database.search_table('users', 'username', username) is None:
-        print("this runs")
+    if (login_user := no_sql_db.database.search_table('users', 'username', hash_user)) is None:
         err_str = "Incorrect Username"
         login = False
-        
-    if no_sql_db.database.search_table('users', 'password', password) is None:
+    
+    salt = login_user[-1]
+    salted_pass = password + salt
+    hash_pass = hashlib.sha256(bytes(salted_pass, 'utf-8')).hexdigest()
+    
+    if no_sql_db.database.search_table('users', 'password', hash_pass) is None:
         err_str = "Incorrect Password"
         login = False
         
-    if login: 
-        return page_view("valid", name=username)
+    # if login: 
+    #     return page_view("valid", name=username)
+    if login:
+        return page_view("friend-list", friend_name="tyra" if login_user[1] == hash_user else "liam")
+
     else:
         return page_view("invalid", reason=err_str)
-
+    
 #-----------------------------------------------------------------------------
 # About
 #-----------------------------------------------------------------------------
@@ -118,4 +127,7 @@ def handle_errors(error):
 
 
 def friend_list():
-    return page_view("friend-list")
+    return page_view("friend-list", friend_name=get_friend_name())
+
+def get_friend_name():
+    return "bob the builder"
