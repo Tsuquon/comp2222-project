@@ -40,22 +40,11 @@ def login_form():
 
 # Check the login credentials
 def login_check(username, password):
-    '''
-        login_check
-        Checks usernames and passwords
-
-        :: username :: The username
-        :: password :: The password
-
-        Returns either a view for valid credentials, or a view for invalid credentials
-    '''
-
-    # By default assume good creds
+    
     login = True
 
     hash_user = hashlib.sha256(bytes(username, 'utf-8')).hexdigest()
 
-    
     if (login_user := no_sql_db.database.search_table('users', 'username', hash_user)) is None:
         err_str = "Incorrect Username"
         login = False
@@ -68,9 +57,8 @@ def login_check(username, password):
         err_str = "Incorrect Password"
         login = False
         
-    # if login: 
-    #     return page_view("valid", name=username)
     if login:
+    #     return page_view("valid", name=username)
         return page_view("friend-list", friend_name="tyra" if login_user[1] == hash_user else "liam")
 
     else:

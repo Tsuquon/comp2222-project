@@ -35,6 +35,7 @@ class Table():
             Returns the first entry found that matches
         '''
         # Lazy search for matching entries
+        # IMPLEMENT COMPARE DIGEST INSTEAD - VULNERABLE TO TIMING ATTACKS
         for entry in self.entries:
             for field_name, value in zip(self.fields, entry):
                 if target_field_name == field_name and target_value == value:

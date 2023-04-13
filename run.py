@@ -65,11 +65,6 @@ def manage_db():
     no_sql_db.database.create_table_entry('users', ['1', 'tyra', 'password', salt])
     
     
-    
-    # # don't think this is used
-    # no_sql_db.database.add_table("friends-liam", "username")
-    # no_sql_db.database.add_table("friends-tyra", "username")
-
 def generate_salt() -> str:
     salt = bcrypt.gensalt().decode('utf-8')
     print(salt)
