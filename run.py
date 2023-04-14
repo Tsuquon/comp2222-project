@@ -39,15 +39,17 @@ host = '0.0.0.0'
 port = 8081
 
 # Turn this off for production
-debug = True
+debug = False
 
 def run_server():    
     '''
         run_server
         Runs a bottle server
     '''
+    
+    
     manage_db()
-    run(host=host, port=port, debug=debug)
+    run(host=host, port=port, debug=debug, server='gunicorn', keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem')
 
 #-----------------------------------------------------------------------------
 # Optional SQL support

@@ -75,6 +75,7 @@ class DB():
         '''
         return self.tables[table_name].search_table(target_field_name, target_value)
 
+
     def create_table_entry(self, table_name, data):
         '''
             Calls the create entry method on the appropriate table
@@ -83,6 +84,7 @@ class DB():
         salt = data[3]
         enc_data = self.encrypt_data(data, salt)
         return self.tables[table_name].create_entry(enc_data)
+    
     
     # generates the hash of the password and returns to create_table_entry
     def encrypt_data(self, raw_data, salt):
