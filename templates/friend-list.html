@@ -3,6 +3,31 @@
 <head>
     <link rel="stylesheet" type="text/css" href="css/temp.css">
     <script src="js/script_head.js"></script>
+    <script type="module">
+        import keyGenerator from '/js/generateKey.js';
+        import keyDeriver from '/js/deriveKey.js';
+        window.addEventListener('load', async () => {
+            const keys = await keyGenerator();
+            keyDeriver(keys.publicKeyJwk, keys.privateKeyJwk);
+          });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        var ws = new WebSocket('ws://localhost:8080/chat');
+
+        ws.onmessage = function(event) {
+            $('#messages').append($('<li>').text(event.data));
+        };
+
+        $('#send').click(function() {
+            var message = $('#message').val();
+            ws.send(message);
+            $('#message').val('');
+        });
+    </script>
+
 </head>
 
 <body>
@@ -17,4 +42,14 @@
             <td>${friend_name}</td>
         </tr>
     </table>
+
+    <ul id="messages"></ul>
+    <input type="text" id="message">
+    <button id="send">Send</button>
+    
+    <form>
+        Message: <input name="message" type="text" />
+    </form>
 </body>
+
+<!-- <script type="text/javascript" src="/js/encryptText.js"></script> -->

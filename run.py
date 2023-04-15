@@ -15,8 +15,10 @@
 #-----------------------------------------------------------------------------
 import os
 import sys
-from bottle import run
+from bottle import run, Bottle
 import bcrypt
+from bottle.ext.websocket import GeventWebSocketServer
+from bottle.ext.websocket import websocket
 
 #-----------------------------------------------------------------------------
 # You may eventually wish to put these in their own directories and then load 
@@ -36,10 +38,12 @@ import no_sql_db
 host = '0.0.0.0'
 
 # Test port, change to the appropriate port to host
-port = 8081
+port = 8082
 
 # Turn this off for production
 debug = False
+
+# app = Bottle()
 
 def run_server():    
     '''
@@ -49,6 +53,8 @@ def run_server():
     
     
     manage_db()
+    # server = GeventWebSocketServer(host=host, port=port)
+
     run(host=host, port=port, debug=debug, server='gunicorn', keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem')
 
 #-----------------------------------------------------------------------------
