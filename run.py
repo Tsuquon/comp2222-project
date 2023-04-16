@@ -17,8 +17,11 @@ import os
 import sys
 from bottle import run, Bottle
 import bcrypt
-from bottle.ext.websocket import GeventWebSocketServer
-from bottle.ext.websocket import websocket
+from geventwebsocket import WebSocketServer, WebSocketApplication
+from geventwebsocket.handler import WebSocketHandler
+from bottle_websocket import websocket, GeventWebSocketServer
+# from bottle.ext.websocket import WebSocketPlugin
+
 
 #-----------------------------------------------------------------------------
 # You may eventually wish to put these in their own directories and then load 
@@ -30,6 +33,8 @@ import model
 import view
 import controller
 import no_sql_db
+from app import app
+import ssl
 
 #-----------------------------------------------------------------------------
 
@@ -38,29 +43,48 @@ import no_sql_db
 host = '0.0.0.0'
 
 # Test port, change to the appropriate port to host
-port = 8082
+port = 8084
 
 # Turn this off for production
-debug = False
+debug = True
 
-# app = Bottle()
+# clients = []
+
+# class ChatWebSocket(WebSocketApplication):
+#     def on_open(self):
+#         # Add client to the list of connected clients
+#         clients.append(self)
+
+#     def on_message(self, message):
+#         # Broadcast the message to all connected clients
+#         for client in clients:
+#             client.ws.send(message)
+
+#     def on_close(self, reason):
+#         # Remove client from the list of connected clients
+#         clients.remove(self)
 
 def run_server():    
     '''
         run_server
         Runs a bottle server
     '''
+    cert_key = './certificates/0.0.0.0-key.pem'
+    cert_file = './certificates/0.0.0.0.pem'
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    ssl_context.load_cert_chain(cert_file, keyfile=cert_key)
     
+    # run(app, host=host, port=port, debug=debug, server='gunicorn', keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem')
     
     manage_db()
-    # server = GeventWebSocketServer(host=host, port=port)
-
-    run(host=host, port=port, debug=debug, server='gunicorn', keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem')
+    
+    run(host=host, port=port, server='gunicorn', keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem')
+    # run(host=host, port=port, server=GeventWebSocketServer, keyfile='./certificates/0.0.0.0-key.pem', certfile='./certificates/0.0.0.0.pem', ssl_context=ssl_context)
+    # server = GeventWebSocketServer(host=host, port=port, handler_class=WebSocketHandler, keyfile=cert_key, certfile=cert_file)
+    # run(server=server)
 
 #-----------------------------------------------------------------------------
-# Optional SQL support
-# Comment out the current manage_db function, and 
-# uncomment the following one to load an SQLite3 database
+
 
 def manage_db():
     '''
@@ -113,4 +137,5 @@ def run_commands(args):
 
 #-----------------------------------------------------------------------------
 
-run_commands(sys.argv)
+if __name__ == '__main__':
+    run_commands(sys.argv)

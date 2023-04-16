@@ -5,8 +5,9 @@
 '''
 
 from bottle import route, get, post, error, request, static_file
-
+from bottle_websocket import websocket
 import model
+from app import app
 
 #-----------------------------------------------------------------------------
 # Static file paths
@@ -133,3 +134,13 @@ def error(error):
 @get('/friend-list')
 def get_friend_list():
     return model.friend_list()
+
+@route('/websocket', apply=[websocket])
+def ws_handler(ws):
+    while True:
+        message = ws.receive()
+        if message is not None:
+            ws.send(message)
+        else:
+            break
+
